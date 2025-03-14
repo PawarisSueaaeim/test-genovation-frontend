@@ -5,7 +5,7 @@ export default function Home() {
     const { data: session } = useSession();
 
 	return (
-		<div>
+		<div className="min-h-screen">
 			Hello world!
 		</div>
 	)
