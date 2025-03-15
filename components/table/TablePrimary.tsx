@@ -152,7 +152,7 @@ export default function TablePrimary({
                         type="text"
                         placeholder="Search..."
                         value={searchQuery}
-                        onChange={(event) => handleSearch(event.target.value)}
+                        onChange={(event) => handleSearch(event)}
                     />
                 </div>
             </div>

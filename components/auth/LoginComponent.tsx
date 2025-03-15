@@ -38,14 +38,14 @@ export default function LoginComponent({}: Props) {
                     type="text"
                     placeholder="Enter your username"
                     value={username}
-                    onChange={(event) => setUsername(event.target.value)}
+                    onChange={(event) => setUsername(event)}
                 />
                 <InputPrimary
                     label="Password"
                     type="password"
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event) => setPassword(event)}
                 />
                 <ButtonPrimary
                     text="เข้าสู่ระบบ"

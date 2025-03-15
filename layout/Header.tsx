@@ -1,12 +1,8 @@
 "use client";
-import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import { FaRegCircleUser } from "react-icons/fa6";
 import { IoIosMenu } from "react-icons/io";
 
 type Props = {};
@@ -16,7 +12,7 @@ export interface IMenuHeader {
     link: string;
 }
 
-const menuData: IMenuHeader[] = [{ menu: "เพิ่มหมอ", link: "/add-doctor" }];
+const menuData: IMenuHeader[] = [{ menu: "การจัดการ", link: "/management" }];
 
 export default function Header({}: Props) {
     const [onOpen, setOnOpen] = useState(false);

@@ -78,7 +78,7 @@ export default function RegisterComponent({}: Props) {
                     type="text"
                     placeholder="Enter your username"
                     value={username}
-                    onChange={(event) => setUsername(event.target.value)}
+                    onChange={(event) => setUsername(event)}
                     textHelper={username == "" ? "**กรุณากรอกชื่อผู้ใช้" : ""}
                 />
                 <InputPrimary
@@ -86,14 +86,14 @@ export default function RegisterComponent({}: Props) {
                     type="password"
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event) => setPassword(event)}
                     textHelper={password == "" ? "**กรุณากรอกรหัสผ่าน" : ""}
                 />
                 <InputPrimary
                     type="password"
                     placeholder="Comfirm password"
                     value={confirmPassword}
-                    onChange={(event) => setConfirmPassword(event.target.value)}
+                    onChange={(event) => setConfirmPassword(event)}
                     textHelper={
                         password !== confirmPassword
                             ? "**รหัสผ่านไม่ตรงกัน"

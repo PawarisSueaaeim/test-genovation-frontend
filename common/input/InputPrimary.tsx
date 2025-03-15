@@ -6,8 +6,8 @@ type Props = {
     label?: string;
     type: string;
     placeholder: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: string | number | readonly string[] | undefined;
+    onChange: (value: string) => void;
     className?: string;
     required?: boolean;
     disabled?: boolean;
@@ -27,6 +27,14 @@ export default function InputPrimary({
 }: Props) {
     const [isShowPassword, setIsShowPassword] = useState(false);
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (type === "time") {
+            onChange(e.target.value);
+        }else{
+            onChange(e.target.value);
+        }
+    }; 
+
     return (
         <div className="flex flex-col w-full">
             <label className="text-xs lg:text-sm">
@@ -40,7 +48,7 @@ export default function InputPrimary({
                     type={type == "password" && isShowPassword ? "text" : type}
                     placeholder={placeholder}
                     value={value}
-                    onChange={onChange}
+                    onChange={handleChange}
                     className="text-xs border-none rounded-lg p-2 focus-within:outline-none"
                     disabled={disabled}
                     required={required}
