@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { IoIosMenu } from "react-icons/io";
+import Swal from "sweetalert2";
 
 type Props = {};
 

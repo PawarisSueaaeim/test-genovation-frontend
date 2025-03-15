@@ -1,8 +1,8 @@
 "use client";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import InputPrimary from "@/common/input/InputPrimary";
-import { signIn } from "next-auth/react";
-import React, { useState } from "react";
+import { signIn, signOut } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 type Props = {};
@@ -17,7 +17,7 @@ export default function LoginComponent({}: Props) {
             password: password,
             redirect: false,
         });
-        if (response?.status == 200) {
+        if (response?.status === 200) {
             Swal.fire({
                 icon: "success",
                 title: "เข้าสู่ระบบสำเร็จ",
@@ -25,6 +25,20 @@ export default function LoginComponent({}: Props) {
                 timer: 1500,
             }).then(() => {
                 window.location.href = "/";
+            })
+        }else if (response?.status === 401) {
+            Swal.fire({
+                icon: "error",
+                title: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+                showConfirmButton: true,
+                confirmButtonText: "OK"
+            })
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาดจากระบบ",
+                showConfirmButton: true,
+                confirmButtonText: "OK"
             })
         }
     };

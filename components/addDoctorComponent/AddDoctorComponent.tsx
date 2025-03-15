@@ -1,7 +1,6 @@
 "use client";
 import InputPrimary from "@/common/input/InputPrimary";
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
@@ -12,6 +11,8 @@ import { DatePickerRange } from "@/common/date/DatePickerRange";
 import { DateRange } from "react-day-picker";
 import PaperPrimary from "@/common/paper/PaperPrimary";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 type Props = {};
 
@@ -22,14 +23,16 @@ type ITimeSlot = {
     end: string;
 };
 
-interface IInputs {
+export interface IDoctor {
     name: string;
     special: string;
     timeSlot: ITimeSlot[];
 }
 
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default function AddDoctorComponent({}: Props) {
-    const { data: session } = useSession();
+    const { data: session }: any = useSession();
     const [name, setName] = useState<string>("");
     const [special, setSpecial] = useState<string>("");
     const [date, setDate] = useState<DateRange | undefined>();
@@ -91,13 +94,29 @@ export default function AddDoctorComponent({}: Props) {
         setCountTimeSlot((prev) => prev.filter((item) => item.id !== id));
     };
 
-    const handleSubmit = () => {
-        const data = {
-            name: name,
-            special: special,
-            timeSlot: countTimeSlot,
-        };
-        console.log(data);
+    const handleSubmit = async () => {
+        try {
+            const data: IDoctor = {
+                name,
+                special,
+                timeSlot: countTimeSlot,
+            };
+            const response = await axios.post(`${baseUrl}/createDoctor`, data, {
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                },
+            })
+            console.log(response)
+        } catch (error: any) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: error,
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            })
+        }
     };
 
     return (
