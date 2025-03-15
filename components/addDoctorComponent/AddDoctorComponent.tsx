@@ -1,10 +1,8 @@
 "use client";
 import InputPrimary from "@/common/input/InputPrimary";
-import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import React, { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
-import { DatePicker } from "@/common/date/DatePicker";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { BLACK_PRIMARY, RED_ERROR, WHITE_PRIMARY } from "@/constant/COLORS";
 import { DatePickerRange } from "@/common/date/DatePickerRange";
@@ -13,6 +11,8 @@ import PaperPrimary from "@/common/paper/PaperPrimary";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 type Props = {};
 
@@ -39,6 +39,8 @@ export default function AddDoctorComponent({}: Props) {
     const [startTime, setStartTime] = useState<string>("");
     const [endTime, setEndTime] = useState<string>("");
     const [countTimeSlot, setCountTimeSlot] = useState<ITimeSlot[]>([]);
+
+    const navigate: AppRouterInstance = useRouter();
 
     const handleSelectChange = (value: string) => {
         setSpecial(value);
@@ -106,13 +108,23 @@ export default function AddDoctorComponent({}: Props) {
                     Authorization: `Bearer ${session.token}`,
                 },
             })
-            console.log(response)
+            if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "เพิ่มแพทย์สำเร็จ",
+                    text: response.data.name,
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    navigate.push('/management');
+                })
+            }
         } catch (error: any) {
             console.log(error);
             Swal.fire({
                 icon: "error",
                 title: "เกิดข้อผิดพลาด",
-                text: error,
+                text: error?.response?.data,
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง",
             })

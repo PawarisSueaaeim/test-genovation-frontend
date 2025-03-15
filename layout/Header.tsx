@@ -13,6 +13,14 @@ export interface IMenuHeader {
     link: string;
 }
 
+export interface IAuth {
+    token: string;
+    user: {
+        isAdmin: boolean;
+        username: string;
+    };
+}
+
 const menuData: IMenuHeader[] = [{ menu: "การจัดการ", link: "/management" }];
 
 export default function Header({}: Props) {
@@ -24,7 +32,9 @@ export default function Header({}: Props) {
         if (typeof window !== "undefined") {
             setPath(window.location.pathname);
         }
-    },[]);
+    }, []);
+
+    console.log(session);
 
     return (
         <div
@@ -34,7 +44,7 @@ export default function Header({}: Props) {
         >
             <div className="flex justify-between items-center pr-4">
                 <div className="text-2xl">
-                    {session ? <span>{session.user.username}</span> : "Logo"}
+                    {session ? <span>{session?.user.username}</span> : "Logo"}
                 </div>
                 <div className="flex items-center gap-2">
                     {session ? (
@@ -60,17 +70,19 @@ export default function Header({}: Props) {
                     />
                 </div>
                 <div className="hidden md:flex flex-nowrap items-center">
-                    {menuData.map((item, index) => {
-                        return (
-                            <Link
-                                href={item.link}
-                                key={index}
-                                className="hover:bg-WHITE_PRIMARY rounded duration-200 p-4 respond"
-                            >
-                                {item.menu}
-                            </Link>
-                        );
-                    })}
+                    {session?.user.isAdmin &&
+                        menuData.map((item, index) => {
+                            return (
+                                <Link
+                                    href={item.link}
+                                    key={index}
+                                    className="hover:bg-WHITE_PRIMARY rounded duration-200 p-4 respond"
+                                >
+                                    {item.menu}
+                                </Link>
+                            );
+                        })}
+
                     {session ? (
                         <span
                             onClick={() => signOut()}
@@ -91,28 +103,30 @@ export default function Header({}: Props) {
                     )}
                 </div>
             </div>
-            <div
-                className={`fixed top-0 bg-gray-100 ${
-                    onOpen
-                        ? "right-0 duration-300"
-                        : "right-[-200px] duration-300"
-                } h-screen p-2 z-[100]`}
-            >
-                <FaLongArrowAltRight onClick={() => setOnOpen(false)} />
-                <div className="flex flex-col font-normal gap-4 mt-2">
-                    {menuData.map((item, index) => {
-                        return (
-                            <Link
-                                href={item.link}
-                                className="py-2 px-8 respond"
-                                key={index}
-                            >
-                                {item.menu}
-                            </Link>
-                        );
-                    })}
+            {session?.user.isAdmin && (
+                <div
+                    className={`fixed top-0 bg-gray-100 ${
+                        onOpen
+                            ? "right-0 duration-300"
+                            : "right-[-200px] duration-300"
+                    } h-screen p-2 z-[100]`}
+                >
+                    <FaLongArrowAltRight onClick={() => setOnOpen(false)} />
+                    <div className="flex flex-col font-normal gap-4 mt-2">
+                        {menuData.map((item, index) => {
+                            return (
+                                <Link
+                                    href={item.link}
+                                    className="py-2 px-8 respond"
+                                    key={index}
+                                >
+                                    {item.menu}
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

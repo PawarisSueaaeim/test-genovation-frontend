@@ -23,7 +23,8 @@ const handler = NextAuth({
                             id: response.data.username,
                             token: response.data.token,
                             user: {
-                                username: response.data.username, 
+                                isAdmin: response.data.isAdmin,
+                                username: response.data.username,
                             },
                         };
                     }
