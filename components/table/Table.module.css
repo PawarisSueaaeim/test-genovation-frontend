@@ -1,0 +1,53 @@
+.tableWrapper {
+    position: relative;
+    overflow: auto;
+    max-height: 500px;
+}
+
+/* Hide the scrollbar for WebKit-based browsers (Chrome, Safari, Edge) */
+.tableWrapper::-webkit-scrollbar {
+    display: none;
+}
+
+/* For other browsers, use overflow-x and overflow-y settings */
+.tableWrapper {
+    -ms-overflow-style: none;  /* For Internet Explorer 10+ */
+    scrollbar-width: none;  /* For Firefox */
+}
+
+.table {
+    border-collapse: collapse;
+    border: none;
+    width: 100%;
+}
+
+.tableHeader {
+    padding: 6px;
+    font-weight: 500;
+    color: #828282;
+    font-size: 15px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.tableHeader:first-child,
+.tableHeader:last-child {
+    width: 60px;
+}
+
+.tableRowItems {
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: #D9D9D9;
+    font-size: 14px;
+    font-weight: 300;
+    white-space: nowrap;
+}
+
+.tableRowItems:last-child {
+    border-style: none;
+}

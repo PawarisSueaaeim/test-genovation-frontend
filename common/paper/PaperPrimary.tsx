@@ -8,7 +8,7 @@ type Props = {
 export default function PaperPrimary({ children, className }: Props) {
     return (
         <div
-            className={`${className} grid grid-cols-1 md:grid-cols-2 shadow-xl rounded-xl`}
+            className={`${className} shadow-xl rounded-xl`}
         >
             {children}
         </div>
