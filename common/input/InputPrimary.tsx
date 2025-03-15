@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 import { GoEye, GoEyeClosed } from "react-icons/go";
+import Swal from "sweetalert2";
 
 type Props = {
     label?: string;
@@ -9,6 +10,7 @@ type Props = {
     value: string | number | readonly string[] | undefined;
     onChange: (value: string) => void;
     className?: string;
+    minTime?: string;
     required?: boolean;
     disabled?: boolean;
     textHelper?: string;
@@ -21,6 +23,7 @@ export default function InputPrimary({
     value,
     onChange,
     className,
+    minTime,
     required,
     disabled,
     textHelper
@@ -28,11 +31,15 @@ export default function InputPrimary({
     const [isShowPassword, setIsShowPassword] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (type === "time") {
-            onChange(e.target.value);
-        }else{
-            onChange(e.target.value);
-        }
+        let newValue = e.target.value;
+
+        // if (type === "time" && minTime) {
+        //     if (newValue < minTime){
+        //         newValue = minTime;
+        //     }
+        // }
+
+        onChange(newValue);
     }; 
 
     return (

@@ -28,6 +28,18 @@ export function DatePickerRange({
         to: addDays(new Date(2025, 0, 20), 20),
     });
 
+    const handleSelect = (range: DateRange | undefined) => {
+        if (range) {
+            const adjustedRange = {
+                from: range.from ? new Date(range.from.setHours(12, 0, 0, 0)) : undefined,
+                to: range.to ? new Date(range.to.setHours(12, 0, 0, 0)) : undefined,
+            };
+            setDate(adjustedRange);
+        } else {
+            setDate(undefined);
+        }
+    };
+
     React.useEffect(() => {
         onChange(date);
     },[date])
@@ -65,7 +77,7 @@ export function DatePickerRange({
                         mode="range"
                         defaultMonth={date?.from}
                         selected={date}
-                        onSelect={setDate}
+                        onSelect={handleSelect}
                         numberOfMonths={2}
                     />
                 </PopoverContent>

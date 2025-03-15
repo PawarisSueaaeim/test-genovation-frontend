@@ -19,7 +19,7 @@ export default function ButtonPrimary({
 }: Props) {
     return (
         <button
-            className={`${className} flex justify-center items-center rounded-md hover:cursor-pointer duration-75 active:scale-95 p-2 text-[12px] md:text-[16px] w-full`}
+            className={`${className} flex justify-center items-center rounded-md hover:cursor-pointer duration-75 ${disabled ? "" : "active:scale-95" } p-2 text-[12px] md:text-[16px] w-full`}
             disabled={disabled}
             onClick={onClick}
             style={{
