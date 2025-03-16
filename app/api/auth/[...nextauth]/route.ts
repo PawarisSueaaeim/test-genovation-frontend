@@ -37,38 +37,12 @@ const handler = NextAuth({
             },
         }),
     ],
-    session: {
-        strategy: "jwt",
-        maxAge: 60 * 60, // 1 hour in seconds
-    },
     callbacks: {
         async jwt({ token, user }: any) {
             if (user) {
                 token.id = user.id;
                 token.token = user.token;
                 token.user = user.user;
-            }
-            // ตรวจสอบว่า token ใกล้หมดอายุหรือไม่
-            const tokenExpirationTime = token.exp;
-            const currentTime = Math.floor(Date.now() / 1000);
-            
-            // ถ้า token จะหมดอายุใน 5 นาที ให้ refresh
-            if (tokenExpirationTime && (tokenExpirationTime - currentTime) < 300) {
-                try {
-                    // เรียก API เพื่อ refresh token
-                    const response = await axios.post(`${baseUrl}/refresh-token`, {}, {
-                        headers: {
-                            Authorization: `Bearer ${token.token}`
-                        }
-                    });
-                    
-                    if (response.status === 200 && response.data) {
-                        token.token = response.data.token;
-                    }
-                } catch (error) {
-                    console.error("Error refreshing token:", error);
-                    // ถ้า refresh ไม่สำเร็จ ให้ใช้ token เดิมต่อไป
-                }
             }
             return token;
         },
