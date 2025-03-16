@@ -41,15 +41,52 @@ export default function EditDoctorComponent({ id }: Props) {
         return true;
     };
 
-	const handleAdd = (date: Date | undefined, startTime: string, endTime: string) => {
-		if (!date) return;
-        const newTimeSlot = {
-            id: timeSlot.length + 1,
-            date: date.toISOString().split('T')[0],
+    const handleAdd = (
+        date: Date | undefined,
+        startTime: string,
+        endTime: string
+    ) => {
+        if (!date || !startTime || !endTime) {
+            Swal.fire({
+                icon: "info",
+                title: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            });
+            return;
+        }
+
+        const formattedDate = date
+            ? `${date.toISOString().substring(0, 10)}`
+            : "";
+
+        const newData = {
+            id: Date.now(),
+            date: formattedDate,
             start: startTime,
             end: endTime,
         };
-        setTimeSlot([...timeSlot, newTimeSlot]);
+
+        // ตรวจสอบว่ามีข้อมูลซ้ำหรือไม่
+        const isDuplicate = timeSlot.some(
+            (item) =>
+                item.date === newData.date &&
+                item.start === newData.start &&
+                item.end === newData.end
+        );
+
+        if (isDuplicate) {
+            Swal.fire({
+                icon: "warning",
+                title: "ข้อมูลซ้ำกัน",
+                text: "คุณได้เพิ่มช่วงเวลานี้ไปแล้ว",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            });
+            return;
+        }
+		
+        setTimeSlot([...timeSlot, newData]);
     };
 
     const getDoctor = async () => {
@@ -63,8 +100,8 @@ export default function EditDoctorComponent({ id }: Props) {
             });
             if (response.status === 200) {
                 setName(response.data.name);
-				setSpecial(response.data.special);
-				setTimeSlot(response.data.timeSlot);
+                setSpecial(response.data.special);
+                setTimeSlot(response.data.timeSlot);
             }
         } catch (error: any) {
             console.log(error);
@@ -78,15 +115,15 @@ export default function EditDoctorComponent({ id }: Props) {
         }
     };
 
-	const handleDeleteTimeSlot = (id: number) => {
+    const handleDeleteTimeSlot = (id: number) => {
         setTimeSlot((prev) => prev.filter((item) => item.id !== id));
     };
 
-	const handleSubmit = () => {
-		console.log(name);
-		console.log(special);
-		console.log(timeSlot);
-	};
+    const handleSubmit = () => {
+        console.log(name);
+        console.log(special);
+        console.log(timeSlot);
+    };
 
     useEffect(() => {
         getDoctor();
@@ -95,22 +132,20 @@ export default function EditDoctorComponent({ id }: Props) {
     return (
         <PaperPrimary className="p-10">
             <DoctorForm
-				name={name}
-				onNameChanged={setName}
-				special={special}
-				onSpecialChanged={setSpecial}
-				timeSlot={timeSlot}
-				handleDeleteTimeSlot={handleDeleteTimeSlot}
-				handleAdd={handleAdd}
-			/>
-			<ButtonPrimary
+                name={name}
+                onNameChanged={setName}
+                special={special}
+                onSpecialChanged={setSpecial}
+                timeSlot={timeSlot}
+                handleDeleteTimeSlot={handleDeleteTimeSlot}
+                handleAdd={handleAdd}
+            />
+            <ButtonPrimary
                 text="บันทึก"
                 textColor={WHITE_PRIMARY}
                 bgColor={BLACK_PRIMARY}
                 onClick={() => handleSubmit()}
-                disabled={
-                    name == "" || special == "" || timeSlot.length == 0
-                }
+                disabled={name == "" || special == "" || timeSlot.length == 0}
             />
         </PaperPrimary>
     );
