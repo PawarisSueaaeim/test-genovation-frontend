@@ -34,8 +34,6 @@ export default function Header({}: Props) {
         }
     }, []);
 
-    console.log(session);
-
     return (
         <div
             className={`${

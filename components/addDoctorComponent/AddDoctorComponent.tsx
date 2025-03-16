@@ -1,6 +1,6 @@
 "use client";
 import InputPrimary from "@/common/input/InputPrimary";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
@@ -11,8 +11,9 @@ import PaperPrimary from "@/common/paper/PaperPrimary";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { DatePicker } from "@/common/date/DatePicker";
 
 type Props = {};
 
@@ -29,18 +30,39 @@ export interface IDoctor {
     timeSlot: ITimeSlot[];
 }
 
+interface ISpecial {
+    special: string;
+}
+
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AddDoctorComponent({}: Props) {
     const { data: session }: any = useSession();
+    const navigate: AppRouterInstance = useRouter();
     const [name, setName] = useState<string>("");
     const [special, setSpecial] = useState<string>("");
-    const [date, setDate] = useState<DateRange | undefined>();
+    const [date, setDate] = useState<Date | undefined>();
     const [startTime, setStartTime] = useState<string>("");
     const [endTime, setEndTime] = useState<string>("");
     const [countTimeSlot, setCountTimeSlot] = useState<ITimeSlot[]>([]);
+    const [specialList, setSpecialList] = useState<ISpecial[]>([]);
 
-    const navigate: AppRouterInstance = useRouter();
+
+    const checkToken = () => {
+        if (!session?.token) {
+            Swal.fire({
+                icon: "error",
+                title: "กรุณาเข้าสู่ระบบ",
+                text: "Session หมดอายุ กรุณาเข้าสู่ระบบใหม่",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง"
+            }).then(() => {
+                navigate.push('/login');
+            });
+            return false;
+        }
+        return true;
+    };
 
     const handleSelectChange = (value: string) => {
         setSpecial(value);
@@ -58,9 +80,7 @@ export default function AddDoctorComponent({}: Props) {
         }
 
         const formattedDate = date
-            ? `${date.from?.toISOString().substring(0, 10)} to ${date.to
-                  ?.toISOString()
-                  .substring(0, 10)}`
+            ? `${date.toISOString().substring(0, 10)}`
             : "";
 
         const newData = {
@@ -97,6 +117,8 @@ export default function AddDoctorComponent({}: Props) {
     };
 
     const handleSubmit = async () => {
+        if (!checkToken()) return;
+        
         try {
             const data: IDoctor = {
                 name,
@@ -131,6 +153,33 @@ export default function AddDoctorComponent({}: Props) {
         }
     };
 
+    useEffect(() => {
+        const getSpecialty = async () => {
+            if (!checkToken()) return;
+
+            try {
+                const response = await axios.get(`${baseUrl}/getSpecials`, {
+                    headers: {
+                        Authorization: `Bearer ${session?.token}`,
+                    },
+                })
+                if (response.status === 200) {
+                    setSpecialList(response.data);
+                }
+            } catch (error: any) {
+                console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "เกิดข้อผิดพลาด",
+                    text: error.response.data,
+                    showConfirmButton: true,
+                    confirmButtonText: "ตกลง"
+                })
+            }
+        };
+        getSpecialty();
+    },[session?.token])
+
     return (
         <div className="flex flex-col gap-4">
             <InputPrimary
@@ -145,11 +194,11 @@ export default function AddDoctorComponent({}: Props) {
                     <SelectValue placeholder="ความชำนาญ" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="001">กระดูก</SelectItem>
-                    <SelectItem value="002">สมอง</SelectItem>
-                    <SelectItem value="003">ตา</SelectItem>
-                    <SelectItem value="004">หัวใจ</SelectItem>
-                    <SelectItem value="005">ทางเดินอาหาร</SelectItem>
+                    {specialList.map((item, index) => {
+                        return (
+                            <SelectItem key={index} value={item.special}>{item.special}</SelectItem>
+                        )
+                    })}
                 </SelectContent>
             </Select>
             <label>เพิ่มเวลานัดหมาย</label>
@@ -176,7 +225,7 @@ export default function AddDoctorComponent({}: Props) {
                     );
                 })}
                 <PaperPrimary className="flex flex-col gap-2 p-4">
-                    <DatePickerRange onChange={(date) => setDate(date)} />
+                    <DatePicker onChange={(date: Date) => setDate(date)} />
                     <InputPrimary
                         type="time"
                         label="เวลาเริ่มทำงาน"
