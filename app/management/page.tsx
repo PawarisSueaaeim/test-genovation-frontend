@@ -37,40 +37,75 @@ export default function Management({}: Props) {
         return true;
     };
 
-    useEffect(() => {
-        const getSpecialty = async () => {
-            if (!checkToken()) return;
+    const getAllDoctors = async () => {
+        if (!checkToken()) return;
 
-            try {
-                const response = await axios.get(`${baseUrl}/getAllDoctors`, {
-                    headers: {
-                        Authorization: `Bearer ${session?.token}`,
-                    },
-                });
-                if (response.status === 200) {
-                    setDoctorList(response.data);
-                }
-            } catch (error: any) {
-                console.log(error);
-                Swal.fire({
-                    icon: "error",
-                    title: "เกิดข้อผิดพลาด",
-                    text: error.response.data,
-                    showConfirmButton: true,
-                    confirmButtonText: "ตกลง",
-                });
+        try {
+            const response = await axios.get(`${baseUrl}/getAllDoctors`, {
+                headers: {
+                    Authorization: `Bearer ${session?.token}`,
+                },
+            });
+            if (response.status === 200) {
+                setDoctorList(response.data);
             }
-        };
-        getSpecialty();
-    }, [session?.token]);
+        } catch (error: any) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: error.response.data,
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            });
+        }
+    };
 
     const handleOnClickAction1 = (id: string) => {
         console.log("onClickEditAdmin", id);
     };
 
     const handleOnClickDeleteAdmin = (id: string) => {
-        console.log("onClickDeleteAdmin", id);
+        Swal.fire({
+            icon: "warning",
+            title: "แจ้งเตือน",
+            text: "คุณต้องการลบข้อมูลนี้หรือไม่",
+            showCancelButton: true,
+            confirmButtonText: "ตกลง",
+            cancelButtonText: "ยกเลิก",
+        }).then( async (result) => {
+            try {
+                if (result.isConfirmed) {
+                    const response = await axios.delete(`${baseUrl}/deleteDoctor/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${session?.token}`,
+                        },
+                    });
+                    if (response.status === 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "ลบข้อมูลสำเร็จ",
+                        }).then(() => {
+                            getAllDoctors();
+                        });
+                    }
+                }
+            } catch (error: any) {
+                console.log(error)
+                Swal.fire({
+                    icon: "error",
+                    title: "เกิดข้อผิดพลาด",
+                    text: error.response.data,
+                    showConfirmButton: true,
+                    confirmButtonText: "ตกลง",
+                })
+            }
+        })
     };
+
+    useEffect(() => {
+        getAllDoctors();
+    }, [session?.token]);
 
     return (
         <div className="flex flex-col gap-4 min-h-screen w-full py-10">
@@ -88,7 +123,7 @@ export default function Management({}: Props) {
                     { tHeadTiltle: "Action", cssTextAlign: "center" },
                 ]}
                 rowsPerPage={25}
-                keyValue="id"
+                keyValue="_id"
                 hasSwitchBtn={false}
                 hasCheckBox={false}
                 hasAction1={true}
