@@ -18,7 +18,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Management({}: Props) {
     const { data: session }: any = useSession();
-    const nagivate: AppRouterInstance = useRouter();
+    const navigate: AppRouterInstance = useRouter();
     const [doctorList, setDoctorList] = useState<IDoctor[]>([]);
 
     const checkToken = () => {
@@ -30,7 +30,7 @@ export default function Management({}: Props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง",
             }).then(() => {
-                nagivate.push("/login");
+                navigate.push("/login");
             });
             return false;
         }
@@ -63,6 +63,7 @@ export default function Management({}: Props) {
 
     const handleOnClickAction1 = (id: string) => {
         console.log("onClickEditAdmin", id);
+        navigate.push(`/management/${id}`);
     };
 
     const handleOnClickDeleteAdmin = (id: string) => {
