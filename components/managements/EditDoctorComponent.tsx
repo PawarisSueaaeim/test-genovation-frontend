@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import AddDoctorComponent, {
+    IDoctor,
     ITimeSlot,
 } from "../addDoctorComponent/AddDoctorComponent";
 import PaperPrimary from "@/common/paper/PaperPrimary";
 import DoctorForm from "../ui/doctorForm";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { BLACK_PRIMARY, WHITE_PRIMARY } from "@/constant/COLORS";
+import { headers } from "next/headers";
 
 type Props = {
     id: string;
@@ -119,10 +121,46 @@ export default function EditDoctorComponent({ id }: Props) {
         setTimeSlot((prev) => prev.filter((item) => item.id !== id));
     };
 
-    const handleSubmit = () => {
-        console.log(name);
-        console.log(special);
-        console.log(timeSlot);
+    const handleSubmit = async () => {
+        if (!checkToken()) return;
+
+        const data: IDoctor = {
+            name,
+            special,
+            timeSlot: timeSlot,
+        };
+
+        try {
+            const response = await axios.put(
+                `${baseUrl}/updateDoctor/${id}`,
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${session?.token}`,
+                    },
+                }
+            );
+            if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "แก้ไขสำเร็จ",
+                    text: response.data.name,
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    navigate.push("/management");
+                });
+            }
+        } catch (error: any) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: error?.response?.data,
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            });
+        }
     };
 
     useEffect(() => {
