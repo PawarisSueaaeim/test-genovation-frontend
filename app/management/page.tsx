@@ -30,7 +30,7 @@ export default function Management({}: Props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง",
             }).then(() => {
-                navigate.push("/login");
+                window.location.href = "/login";
             });
             return false;
         }

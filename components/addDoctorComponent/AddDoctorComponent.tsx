@@ -43,7 +43,7 @@ export default function AddDoctorComponent({}: Props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง",
             }).then(() => {
-                navigate.push("/login");
+                window.location.href = "/login";
             });
             return false;
         }
@@ -109,7 +109,7 @@ export default function AddDoctorComponent({}: Props) {
             };
             const response = await axios.post(`${baseUrl}/createDoctor`, data, {
                 headers: {
-                    Authorization: `Bearer ${session.token}`,
+                    Authorization: `Bearer ${session?.token}`,
                 },
             });
             if (response.status === 200) {
