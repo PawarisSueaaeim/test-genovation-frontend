@@ -1,3 +1,4 @@
+//@ts-ignore
 import { PageProps } from "@/.next/types/app/page";
 import TitlePage from "@/common/title/TitlePage";
 import EditDoctorComponent from "@/components/managements/EditDoctorComponent";
