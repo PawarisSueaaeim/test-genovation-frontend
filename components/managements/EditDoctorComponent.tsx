@@ -85,7 +85,7 @@ export default function EditDoctorComponent({ id }: Props) {
             });
             return;
         }
-		
+
         setTimeSlot([...timeSlot, newData]);
     };
 
