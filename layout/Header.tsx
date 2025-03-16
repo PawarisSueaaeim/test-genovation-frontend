@@ -42,9 +42,9 @@ export default function Header({}: Props) {
             } relative shadow-2xl p-4 w-full`}
         >
             <div className="flex justify-between items-center pr-4">
-                <div className="text-2xl">
-                    {session ? <span>{session?.user.username}</span> : "Logo"}
-                </div>
+                <Link href="/" className="text-2xl">
+                    Home
+                </Link>
                 <div className="flex items-center gap-2">
                     {session ? (
                         <span

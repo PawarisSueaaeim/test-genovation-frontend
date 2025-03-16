@@ -163,7 +163,7 @@ export default function HomepageComponent() {
     return (
         <div className="flex flex-col gap-4">
             <div className="text-xl font-normal">นัดหมาย</div>
-            <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {bookingDatas.map((item, index) => {
                     return (
                         <PaperPrimary
@@ -188,57 +188,59 @@ export default function HomepageComponent() {
                 })}
             </div>
             <div className="text-xl font-normal">รายการแพทย์</div>
-            {listDoctor.map((item, index) => {
-                return (
-                    <PaperPrimary
-                        key={index}
-                        className="flex flex-col gap-2 p-4"
-                    >
-                        <div className="flex text-xl gap-2">
-                            <span className="font-bold">ความชำนาญ:</span>
-                            <span className="font-light">{item.special}</span>
-                        </div>
-                        <div className="flex text-sm gap-2">
-                            <span className="font-bold">ชื่อ:</span>
-                            <span className="font-light">{item.name}</span>
-                        </div>
-                        <PaperPrimary>
-                            <Select
-                                value={timeSelected}
-                                onValueChange={(value) =>
-                                    setTimeSelected(value)
-                                }
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="เลือกช่วงเวลานัดหมาย" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {item.timeSlot.map((item, index) => {
-                                        return (
-                                            <SelectItem
-                                                key={index}
-                                                value={item.id.toString()}
-                                            >
-                                                <span>วันที่: {item.date}</span>
-                                                <span>
-                                                    เวลา: {item.start} -{" "}
-                                                    {item.end}
-                                                </span>
-                                            </SelectItem>
-                                        );
-                                    })}
-                                </SelectContent>
-                            </Select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {listDoctor.map((item, index) => {
+                    return (
+                        <PaperPrimary
+                            key={index}
+                            className="flex flex-col gap-2 p-4"
+                        >
+                            <div className="flex text-xl gap-2">
+                                <span className="font-bold">ความชำนาญ:</span>
+                                <span className="font-light">{item.special}</span>
+                            </div>
+                            <div className="flex text-sm gap-2">
+                                <span className="font-bold">ชื่อ:</span>
+                                <span className="font-light">{item.name}</span>
+                            </div>
+                            <PaperPrimary>
+                                <Select
+                                    value={timeSelected}
+                                    onValueChange={(value) =>
+                                        setTimeSelected(value)
+                                    }
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="เลือกช่วงเวลานัดหมาย" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {item.timeSlot.map((item, index) => {
+                                            return (
+                                                <SelectItem
+                                                    key={index}
+                                                    value={item.id.toString()}
+                                                >
+                                                    <span>วันที่: {item.date}</span>
+                                                    <span>
+                                                        เวลา: {item.start} -{" "}
+                                                        {item.end}
+                                                    </span>
+                                                </SelectItem>
+                                            );
+                                        })}
+                                    </SelectContent>
+                                </Select>
+                            </PaperPrimary>
+                            <ButtonPrimary
+                                text="นัดหมาย"
+                                bgColor={BLUE_PRIMARY}
+                                textColor={WHITE_PRIMARY}
+                                onClick={() => handleBook(item._id)}
+                            />
                         </PaperPrimary>
-                        <ButtonPrimary
-                            text="นัดหมาย"
-                            bgColor={BLUE_PRIMARY}
-                            textColor={WHITE_PRIMARY}
-                            onClick={() => handleBook(item._id)}
-                        />
-                    </PaperPrimary>
-                );
-            })}
+                    );
+                })}
+            </div>
         </div>
     );
 }
