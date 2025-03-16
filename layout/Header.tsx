@@ -16,6 +16,7 @@ export interface IMenuHeader {
 export interface IAuth {
     token: string;
     user: {
+        id: string;
         isAdmin: boolean;
         username: string;
     };

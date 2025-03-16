@@ -20,9 +20,10 @@ const handler = NextAuth({
                     });
                     if (response.status === 200 && response.data) {
                         return {
-                            id: response.data.username,
+                            id: response.data.id,
                             token: response.data.token,
                             user: {
+                                id: response.data.id,
                                 isAdmin: response.data.isAdmin,
                                 username: response.data.username,
                             },
@@ -46,6 +47,7 @@ const handler = NextAuth({
             return token;
         },
         async session({ session, token }: any) {
+            session.id = token.id;
             session.user = token.user;
             session.token = token.token;
             return session;

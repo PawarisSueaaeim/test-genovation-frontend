@@ -20,6 +20,7 @@ export interface ITimeSlot {
 }
 
 export interface IDoctor {
+    _id?: string;
     name: string;
     special: string;
     timeSlot: ITimeSlot[];
