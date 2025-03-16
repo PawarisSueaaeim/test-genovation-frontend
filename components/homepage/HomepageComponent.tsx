@@ -1,7 +1,5 @@
 "use client";
-import { IAuth } from "@/layout/Header";
 import axios from "axios";
-import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -12,24 +10,13 @@ import { SelectValue } from "@radix-ui/react-select";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { BLUE_PRIMARY, WHITE_PRIMARY } from "@/constant/COLORS";
 
-type Props = {};
-
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-export default function HomepageComponent({}: Props) {
+export default function HomepageComponent() {
     const { data: session }: any = useSession();
     const [listDoctor, setListDoctor] = useState<IDoctor[]>([]);
     const [timeSelected, setTimeSelected] = useState<string>("");
 
-    // const checkToken = () => {
-    //     if (!session?.token) {
-    //         window.location.href = "/login";
-    //     }
-    //     return true;
-    // };
-
     const getListDoctors = async () => {
-        // if (!checkToken()) return;
-
         try {
             console.log(session);
             const response = await axios.get(`${baseUrl}/getAllDoctors`, {
@@ -53,9 +40,21 @@ export default function HomepageComponent({}: Props) {
     };
 
     const handleBook = (id: string | undefined) => {
-        console.log("id คนไข้: ", session?.id)
-        console.log("id หมอ: ",id);
-        console.log("id เวลา: ",Number(timeSelected))
+        if (timeSelected === "") {
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: "กรุณาเลือกเวลา",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง",
+            }).then(() => {
+                return;
+            });
+        }else{
+            console.log("id คนไข้: ", session?.id)
+            console.log("id หมอ: ", id);
+            console.log("id เวลา: ",Number(timeSelected))
+        }
     };
 
     useEffect(() => {
