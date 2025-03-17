@@ -10,7 +10,7 @@ export default function AddDoctor({}: Props) {
     return (
         <div className='flex flex-col py-10 min-h-screen'>
             <TitlePage text='เพิ่มหมอ'/>
-            <PaperPrimary className='p-10'>
+            <PaperPrimary className='p-2 md:p-10'>
                 <AddDoctorComponent/>
             </PaperPrimary>
         </div>

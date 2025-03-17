@@ -132,6 +132,7 @@ export default function DoctorForm({
                             className="flex flex-col justify-between gap-2 p-4"
                         >
                             <div>
+                                <div className="font-bold text-2xl">Slot: {index + 1}</div>
                                 <div>วันที่: {item.date}</div>
                                 <div>
                                     เวลาทำงาน: {item.start} to {item.end}

@@ -143,7 +143,7 @@ export default function AddDoctorComponent({}: Props) {
     };
 
     return (
-        <PaperPrimary className="p-10">
+        <PaperPrimary className="flex flex-col gap-4 p-2 md:p-10">
             <DoctorForm
                 name={name}
                 onNameChanged={setName}
@@ -154,7 +154,7 @@ export default function AddDoctorComponent({}: Props) {
                 handleAdd={handleAdd}
             />
             <ButtonPrimary
-                text="เพิ่ม"
+                text="เพิ่มแพทย์"
                 textColor={WHITE_PRIMARY}
                 bgColor={BLACK_PRIMARY}
                 onClick={() => handleSubmit()}
