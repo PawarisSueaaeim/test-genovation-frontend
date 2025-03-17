@@ -16,6 +16,7 @@ import { ITimeSlot } from "../addDoctorComponent/AddDoctorComponent";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
+import { getErrorMessage } from "@/lib/utils";
 
 interface Props {
     name: string;
@@ -24,7 +25,11 @@ interface Props {
     onNameChanged: (value: string) => void;
     onSpecialChanged: (value: string) => void;
     handleDeleteTimeSlot: (id: number) => void;
-    handleAdd: (date: Date | undefined, startTime: string, endTime: string) => void;
+    handleAdd: (
+        date: Date | undefined,
+        startTime: string,
+        endTime: string
+    ) => void;
 }
 
 interface ISpecial {
@@ -77,15 +82,16 @@ export default function DoctorForm({
                 if (response.status === 200) {
                     setSpecialList(response.data);
                 }
-            } catch (error: any) {
-                console.log(error);
+            } catch (error: unknown) {
                 Swal.fire({
                     icon: "error",
-                    title: "เกิดข้อผิดพลาด",
-                    text: error.response.data,
-                    showConfirmButton: true,
-                    confirmButtonText: "ตกลง",
+                    title: "เกิดข้อผิดพลาด GetSpecialty",
+                    text: getErrorMessage(error),
+                    confirmButtonText: "OK",
                 });
+                return {
+                    error: getErrorMessage(error),
+                };
             }
         };
         getSpecialty();

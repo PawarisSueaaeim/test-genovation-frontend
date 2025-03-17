@@ -72,7 +72,7 @@ export default function TablePrimary({
     const { slice, range } = useTable(filteredData, page, selectedRowPerPage);
 
     const [sortOrder, setSortOrder] = useState<string>("asc");
-    const [sortedColumn, setSortedColumn] = useState(null);
+    const [sortedColumn, setSortedColumn] = useState<string | null>(null);
 
     const rowOptions = [5, 7, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 9999];
 

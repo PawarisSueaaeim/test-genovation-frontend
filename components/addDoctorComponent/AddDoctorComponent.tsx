@@ -132,7 +132,7 @@ export default function AddDoctorComponent({}: Props) {
         } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด Register",
+                title: "เกิดข้อผิดพลาด เพิ่มหมอ",
                 text: getErrorMessage(error),
                 confirmButtonText: "OK",
             });

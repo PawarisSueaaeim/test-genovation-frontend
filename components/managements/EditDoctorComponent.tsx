@@ -13,6 +13,7 @@ import DoctorForm from "../ui/doctorForm";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { BLACK_PRIMARY, WHITE_PRIMARY } from "@/constant/COLORS";
 import { headers } from "next/headers";
+import { getErrorMessage } from "@/lib/utils";
 
 type Props = {
     id: string;
@@ -105,15 +106,16 @@ export default function EditDoctorComponent({ id }: Props) {
                 setSpecial(response.data.special);
                 setTimeSlot(response.data.timeSlot);
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error.response.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด GetDoctor",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
@@ -151,15 +153,16 @@ export default function EditDoctorComponent({ id }: Props) {
                     navigate.push("/management");
                 });
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error?.response?.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด UpdateDoctor",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 

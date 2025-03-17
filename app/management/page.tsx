@@ -4,6 +4,7 @@ import TitlePage from "@/common/title/TitlePage";
 import { IDoctor } from "@/components/addDoctorComponent/AddDoctorComponent";
 import TablePrimary from "@/components/table/TablePrimary";
 import { BLACK_PRIMARY, WHITE_PRIMARY } from "@/constant/COLORS";
+import { getErrorMessage } from "@/lib/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -49,15 +50,16 @@ export default function Management({}: Props) {
             if (response.status === 200) {
                 setDoctorList(response.data);
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error.response.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด GetAllDoctor",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
@@ -74,14 +76,17 @@ export default function Management({}: Props) {
             showCancelButton: true,
             confirmButtonText: "ตกลง",
             cancelButtonText: "ยกเลิก",
-        }).then( async (result) => {
+        }).then(async (result) => {
             try {
                 if (result.isConfirmed) {
-                    const response = await axios.delete(`${baseUrl}/deleteDoctor/${id}`, {
-                        headers: {
-                            Authorization: `Bearer ${session?.token}`,
-                        },
-                    });
+                    const response = await axios.delete(
+                        `${baseUrl}/deleteDoctor/${id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${session?.token}`,
+                            },
+                        }
+                    );
                     if (response.status === 200) {
                         Swal.fire({
                             icon: "success",
@@ -91,17 +96,18 @@ export default function Management({}: Props) {
                         });
                     }
                 }
-            } catch (error: any) {
-                console.log(error)
+            } catch (error: unknown) {
                 Swal.fire({
                     icon: "error",
-                    title: "เกิดข้อผิดพลาด",
-                    text: error.response.data,
-                    showConfirmButton: true,
-                    confirmButtonText: "ตกลง",
-                })
+                    title: "เกิดข้อผิดพลาด DeleteDoctor",
+                    text: getErrorMessage(error),
+                    confirmButtonText: "OK",
+                });
+                return {
+                    error: getErrorMessage(error),
+                };
             }
-        })
+        });
     };
 
     useEffect(() => {

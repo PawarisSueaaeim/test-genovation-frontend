@@ -32,7 +32,7 @@ export default function LoginComponent({}: Props) {
         } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด Register",
+                title: "เกิดข้อผิดพลาด Login",
                 text: getErrorMessage(error),
                 confirmButtonText: "OK",
             });

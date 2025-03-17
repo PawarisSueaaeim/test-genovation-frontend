@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import { BLUE_PRIMARY, RED_ERROR, WHITE_PRIMARY } from "@/constant/COLORS";
+import { getErrorMessage } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -36,15 +37,16 @@ export default function HomepageComponent() {
             if (response.status === 200) {
                 setListDoctor(response.data);
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error?.response?.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด GetAllDoctors",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
@@ -61,15 +63,16 @@ export default function HomepageComponent() {
             if (response.status === 200) {
                 setBookingDatas(response.data);
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error?.response?.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด GetBooking",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
@@ -110,26 +113,30 @@ export default function HomepageComponent() {
                         getBookDatas();
                     });
                 }
-            } catch (error: any) {
-                console.log(error);
+            } catch (error: unknown) {
                 Swal.fire({
                     icon: "error",
-                    title: "เกิดข้อผิดพลาด",
-                    text: error?.response?.data,
-                    showConfirmButton: true,
-                    confirmButtonText: "ตกลง",
+                    title: "เกิดข้อผิดพลาด Booking",
+                    text: getErrorMessage(error),
+                    confirmButtonText: "OK",
                 });
+                return {
+                    error: getErrorMessage(error),
+                };
             }
         }
     };
 
-    const handleCancel = async (id: number ) => {
+    const handleCancel = async (id: number) => {
         try {
-            const response = await axios.delete(`${baseUrl}/deleteBooking/${session?.id}/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${session?.token}`,
-                },
-            });
+            const response = await axios.delete(
+                `${baseUrl}/deleteBooking/${session?.id}/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${session?.token}`,
+                    },
+                }
+            );
             if (response.status === 200) {
                 Swal.fire({
                     icon: "success",
@@ -141,15 +148,16 @@ export default function HomepageComponent() {
                     getBookDatas();
                 });
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error?.response?.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด Cancel booking",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
@@ -197,7 +205,9 @@ export default function HomepageComponent() {
                         >
                             <div className="flex text-xl gap-2">
                                 <span className="font-bold">ความชำนาญ:</span>
-                                <span className="font-light">{item.special}</span>
+                                <span className="font-light">
+                                    {item.special}
+                                </span>
                             </div>
                             <div className="flex text-sm gap-2">
                                 <span className="font-bold">ชื่อ:</span>
@@ -220,7 +230,9 @@ export default function HomepageComponent() {
                                                     key={index}
                                                     value={item.id.toString()}
                                                 >
-                                                    <span>วันที่: {item.date}</span>
+                                                    <span>
+                                                        วันที่: {item.date}
+                                                    </span>
                                                     <span>
                                                         เวลา: {item.start} -{" "}
                                                         {item.end}
