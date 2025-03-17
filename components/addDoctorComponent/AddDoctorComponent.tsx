@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import DoctorForm from "../ui/doctorForm";
+import { getErrorMessage } from "@/lib/utils";
 
 type Props = {};
 
@@ -51,7 +52,11 @@ export default function AddDoctorComponent({}: Props) {
         return true;
     };
 
-    const handleAdd = (date: Date | undefined, startTime: string, endTime: string) => {
+    const handleAdd = (
+        date: Date | undefined,
+        startTime: string,
+        endTime: string
+    ) => {
         if (!date || !startTime || !endTime) {
             Swal.fire({
                 icon: "info",
@@ -124,15 +129,16 @@ export default function AddDoctorComponent({}: Props) {
                     navigate.push("/management");
                 });
             }
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาด",
-                text: error?.response?.data,
-                showConfirmButton: true,
-                confirmButtonText: "ตกลง",
+                title: "เกิดข้อผิดพลาด Register",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
             });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 

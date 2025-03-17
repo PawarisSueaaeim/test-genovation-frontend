@@ -1,13 +1,14 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { register } from "@/api/auth";
 import InputPrimary from "@/common/input/InputPrimary";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 export default function RegisterComponent({}: Props) {
+    const navigate = useRouter();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [invalidPassword, setInvalidPassword] = useState<string[]>([]);
@@ -34,23 +35,12 @@ export default function RegisterComponent({}: Props) {
     }, []);
 
     const handleSubmit = async () => {
-        const response = await register({
+        await register({
             username: username,
             password: password,
+        }).then(() => {
+            navigate.push("/login");
         });
-		if (response) {
-			if (response.status == 200) {
-				Swal.fire({
-					icon: "success",
-					title: "ลงทะเบียนสำเร็จ",
-					text: response.data,
-					showConfirmButton: false,
-					timer: 1500,
-				}).then(() => {
-					window.location.href = "/login";
-				});
-			}
-		}
     };
 
     useEffect(() => {
@@ -62,6 +52,8 @@ export default function RegisterComponent({}: Props) {
             invalidPassword.length === 0
         ) {
             setDisabled(false);
+        }else{
+            setDisabled(true);
         }
     }, [username, password, invalidPassword, confirmPassword]);
 

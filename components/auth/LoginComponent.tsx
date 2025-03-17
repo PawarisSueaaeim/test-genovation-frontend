@@ -1,8 +1,9 @@
 "use client";
 import ButtonPrimary from "@/common/button/ButtonPrimary";
 import InputPrimary from "@/common/input/InputPrimary";
-import { signIn, signOut } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import { getErrorMessage } from "@/lib/utils";
+import { signIn } from "next-auth/react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
 
 type Props = {};
@@ -12,34 +13,32 @@ export default function LoginComponent({}: Props) {
     const [password, setPassword] = useState("");
 
     const handleSubmit = async () => {
-        const response = await signIn("credentials", {
-            username: username,
-            password: password,
-            redirect: false,
-        });
-        if (response?.status === 200) {
-            Swal.fire({
-                icon: "success",
-                title: "เข้าสู่ระบบสำเร็จ",
-                showConfirmButton: false,
-                timer: 1500,
-            }).then(() => {
-                window.location.href = "/";
-            })
-        }else if (response?.status === 401) {
-            Swal.fire({
-                icon: "error",
-                title: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
-                showConfirmButton: true,
-                confirmButtonText: "OK"
-            })
-        }else{
+        try {
+            const response = await signIn("credentials", {
+                username: username,
+                password: password,
+                redirect: false,
+            });
+            if (response?.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "เข้าสู่ระบบสำเร็จ",
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then(() => {
+                    window.location.href = "/";
+                });
+            }
+        } catch (error: unknown) {
             Swal.fire({
                 icon: "error",
-                title: "เกิดข้อผิดพลาดจากระบบ",
-                showConfirmButton: true,
-                confirmButtonText: "OK"
-            })
+                title: "เกิดข้อผิดพลาด Register",
+                text: getErrorMessage(error),
+                confirmButtonText: "OK",
+            });
+            return {
+                error: getErrorMessage(error),
+            };
         }
     };
 
