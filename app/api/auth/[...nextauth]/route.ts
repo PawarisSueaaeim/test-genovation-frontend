@@ -1,6 +1,8 @@
+import { getErrorMessage } from "@/lib/utils";
 import axios from "axios";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import Swal from "sweetalert2";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -30,8 +32,14 @@ const handler = NextAuth({
                         };
                     }
                     return null;
-                } catch (error) {
-                    console.error("Login error:", error);
+                } catch (error: unknown) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: getErrorMessage(error),
+                        showConfirmButton: false,
+                        timer: 1000,
+                    })
                     return null;
                 }
             },

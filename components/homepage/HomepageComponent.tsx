@@ -14,6 +14,7 @@ import { getErrorMessage } from "@/lib/utils";
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 interface IBooking {
+    doctor_id: string;
     doctor: string;
     special: string;
     id: number;
@@ -123,14 +124,16 @@ export default function HomepageComponent() {
                 return {
                     error: getErrorMessage(error),
                 };
+            } finally {
+                getListDoctors();
             }
         }
     };
 
-    const handleCancel = async (id: number) => {
+    const handleCancel = async (id: number, timeSlot: IBooking) => {
         try {
-            const response = await axios.delete(
-                `${baseUrl}/deleteBooking/${session?.id}/${id}`,
+            const response = await axios.post(
+                `${baseUrl}/deleteBooking/${session?.id}/${id}/${timeSlot.doctor_id}`, timeSlot,
                 {
                     headers: {
                         Authorization: `Bearer ${session?.token}`,
@@ -146,6 +149,7 @@ export default function HomepageComponent() {
                     showConfirmButton: false,
                 }).then(() => {
                     getBookDatas();
+                    getListDoctors();
                 });
             }
         } catch (error: unknown) {
@@ -189,7 +193,7 @@ export default function HomepageComponent() {
                                 text="ยกเลิก"
                                 bgColor={RED_ERROR}
                                 textColor={WHITE_PRIMARY}
-                                onClick={() => handleCancel(item.id)}
+                                onClick={() => handleCancel(item.id, item)}
                             />
                         </PaperPrimary>
                     );

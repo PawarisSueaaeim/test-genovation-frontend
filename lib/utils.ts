@@ -7,7 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getErrorMessage = (error: unknown) => {
-    console.log(error);
     let message: string;
     if (error instanceof AxiosError) {
         message = error.response?.data;
